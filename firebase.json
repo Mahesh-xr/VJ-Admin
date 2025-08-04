@@ -1,0 +1,26 @@
+{
+  "functions": {
+    "source": "functions"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "vayujal-db-for-device-customer",
+          "appId": "1:148518126293:android:f09dc294a2edc1a446d85c",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "vayujal-db-for-device-customer",
+          "configurations": {
+            "android": "1:148518126293:android:f09dc294a2edc1a446d85c",
+            "ios": "1:148518126293:ios:833a425d3d8cb44646d85c",
+            "web": "1:148518126293:web:c6e59c19073b679646d85c"
+          }
+        }
+      }
+    }
+  }
+}
