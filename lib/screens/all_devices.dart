@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vayujal/DatabaseAction/adminAction.dart';
+import 'package:vayujal/services/dropdown_service.dart';
 import 'package:vayujal/screens/new_service_request_page.dart';
 import 'package:vayujal/widgets/add_new_device_widgets/device_form.dart';
 import 'package:vayujal/widgets/navigations/NormalAppBar.dart';
@@ -32,14 +33,34 @@ class _DevicesScreenState extends State<DevicesScreen> {
   };
   
   // Available filter options
-  final List<String> _modelOptions = ['VJ - Home', 'VJ - Plus', 'VJ - Grand', 'VJ - Ultra', 'VJ - Max'];
+  List<String> _modelOptions = [];
   List<String> _cityOptions = [];
   List<String> _stateOptions = [];
 
   @override
   void initState() {
     super.initState();
+    _loadModelOptions();
     fetchDevices();
+  }
+
+  Future<void> _loadModelOptions() async {
+    try {
+      final modelValues = await DropdownService.getModelValues();
+      if (mounted) {
+        setState(() {
+          _modelOptions = modelValues;
+        });
+      }
+    } catch (e) {
+      print('Error loading model options: $e');
+      // Fallback to default values
+      if (mounted) {
+        setState(() {
+          _modelOptions = ['VJ - Home', 'VJ - Plus', 'VJ - Grand', 'VJ - Ultra', 'VJ - Max'];
+        });
+      }
+    }
   }
 
   Future<void> fetchDevices() async {
@@ -218,7 +239,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[80],
-      appBar: const CustomAppBar(title: 'All Devices'),
+      appBar: const Normalappbar(title: 'All Devices'),
       body: Column(
         children: [
           const SizedBox(height: 16),

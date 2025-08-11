@@ -45,6 +45,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
               }
               
               if (profileSnapshot.hasData && profileSnapshot.data!.exists) {
+                
                 final data = profileSnapshot.data!.data() as Map<String, dynamic>?;
                 final bool isProfileComplete = data?['isProfileComplete'] ?? false;
                 

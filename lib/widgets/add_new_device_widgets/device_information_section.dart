@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'custom_dropdown.dart';
 import 'custom_text_field.dart';
 import 'date_picker_field.dart';
+import '../../services/dropdown_service.dart';
 
-class DeviceInformationSection extends StatelessWidget {
+class DeviceInformationSection extends StatefulWidget {
   final String? selectedModel;
   final TextEditingController serialNumberController;
   final TextEditingController awgSerialNumberController;
@@ -28,7 +29,68 @@ class DeviceInformationSection extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<DeviceInformationSection> createState() => _DeviceInformationSectionState();
+}
+
+class _DeviceInformationSectionState extends State<DeviceInformationSection> {
+  List<String> _modelValues = [];
+  List<String> _dispenserValues = [];
+  List<String> _powerSourceValues = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDropdownValues();
+  }
+
+  Future<void> _loadDropdownValues() async {
+    try {
+      final modelValues = await DropdownService.getModelValues();
+      final dispenserValues = await DropdownService.getDispenserValues();
+      final powerSourceValues = await DropdownService.getPowerSourceValues();
+
+      if (mounted) {
+        setState(() {
+          _modelValues = modelValues;
+          _dispenserValues = dispenserValues;
+          _powerSourceValues = powerSourceValues;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error loading dropdown values: $e');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -59,11 +121,11 @@ class DeviceInformationSection extends StatelessWidget {
           // Model Dropdown with validation
           CustomDropdown(
             label: 'Model',
-            value: selectedModel,
-            items: const ['AWG Model', 'VJ - Home', 'VJ - Plus', 'VJ - Grand', 'VJ - Ultra', 'VJ - Max'],
-            onChanged: onModelChanged,
+            value: widget.selectedModel,
+            items: _modelValues,
+            onChanged: widget.onModelChanged,
             validator: (value) {
-              if (value == null || value.isEmpty || value == 'AWG Model') {
+              if (value == null || value.isEmpty) {
                 return 'Please select a model';
               }
               return null;
@@ -73,7 +135,7 @@ class DeviceInformationSection extends StatelessWidget {
 
           CustomTextField(
             label: 'AWG Serial Number',
-            controller: awgSerialNumberController,
+            controller: widget.awgSerialNumberController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter AWG serial number';
@@ -86,7 +148,7 @@ class DeviceInformationSection extends StatelessWidget {
           // Serial Number
           CustomTextField(
             label: 'Compressor Serial Number',
-            controller: serialNumberController,
+            controller: widget.serialNumberController,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter compressor serial number';
@@ -99,9 +161,9 @@ class DeviceInformationSection extends StatelessWidget {
           // Dispenser Details with validation
           CustomDropdown(
             label: 'Dispenser Details',
-            value: selectedDispenser,
-            items: const ['YES', 'NO'],
-            onChanged: onDispenserChanged,
+            value: widget.selectedDispenser,
+            items: _dispenserValues,
+            onChanged: widget.onDispenserChanged,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please select dispenser details';
@@ -114,9 +176,9 @@ class DeviceInformationSection extends StatelessWidget {
           // Power Source with validation
           CustomDropdown(
             label: 'Power source',
-            value: selectedPowerSource,
-            items: const ['EB Supply', 'Solar Supply', 'Hybrid Supply'],
-            onChanged: onPowerSourceChanged,
+            value: widget.selectedPowerSource,
+            items: _powerSourceValues,
+            onChanged: widget.onPowerSourceChanged,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please select a power source';
@@ -129,7 +191,7 @@ class DeviceInformationSection extends StatelessWidget {
           // Installation Date
           DatePickerField(
             label: 'Installation Date',
-            controller: installationDateController,
+            controller: widget.installationDateController,
             hintText: 'dd-mm-yyyy',
           ),
         ],

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:vayujal/services/dropdown_service.dart';
 import 'dart:io';
 
 class AdminProfileSetupPage extends StatefulWidget {
@@ -26,21 +27,8 @@ class _AdminProfileSetupPageState extends State<AdminProfileSetupPage> {
   File? _selectedImage;
   
   // Designation options
-  final List<String> _designations = [
-    'Admin',
-    'Technician',
-    'Senior Technician',
-    'Lead Technician',
-    'Supervisor',
-    'Manager',
-    'Engineer',
-    'Senior Engineer',
-    'Field Engineer',
-    'Technical Lead',
-    'Team Leader',
-    'Project Manager',
-    'Operations Manager',
-  ];
+  List<String> _designations = [];
+  bool _isLoadingDesignations = true;
   
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -51,6 +39,7 @@ class _AdminProfileSetupPageState extends State<AdminProfileSetupPage> {
   void initState() {
     super.initState();
     _loadAdminProfile();
+    _loadDesignations();
   }
 
   @override
@@ -93,6 +82,29 @@ class _AdminProfileSetupPageState extends State<AdminProfileSetupPage> {
       setState(() {
         _isLoadingProfile = false;
       });
+    }
+  }
+
+  Future<void> _loadDesignations() async {
+    try {
+      final designations = await DropdownService.getDesignationValues();
+      if (mounted) {
+        setState(() {
+          _designations = designations;
+          _isLoadingDesignations = false;
+          // Set default selection if available and not already set
+          if (_designations.isNotEmpty && _selectedDesignation.isEmpty) {
+            _selectedDesignation = _designations.first;
+          }
+        });
+      }
+    } catch (e) {
+      print('Error loading designations: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingDesignations = false;
+        });
+      }
     }
   }
 
@@ -704,10 +716,13 @@ class _AdminProfileSetupPageState extends State<AdminProfileSetupPage> {
                               ),
                             ),
                           ],
+
                         ),
                       ),
                     ),
+  SizedBox(height: 40),
                   ],
+                  
                 ),
               ),
             ),

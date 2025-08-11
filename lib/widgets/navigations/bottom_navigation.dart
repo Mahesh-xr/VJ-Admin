@@ -20,16 +20,16 @@ class BottomNavigation extends StatelessWidget {
         Navigator.pushReplacementNamed(context, '/dashboard');
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, '/alldevice');
+        Navigator.pushNamed(context, '/alldevice');
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/profile');
+        Navigator.pushNamed(context, '/profile');
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, '/history');
+        Navigator.pushNamed(context, '/history');
         break;
       case 4:
-        Navigator.pushReplacementNamed(context, '/notifications');
+        Navigator.pushNamed(context, '/notifications');
         break;
     }
   }

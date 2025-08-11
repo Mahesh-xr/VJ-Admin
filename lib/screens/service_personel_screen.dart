@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vayujal/widgets/navigations/NormalAppBar.dart';
 import 'package:vayujal/widgets/navigations/bottom_navigation.dart';
 import 'package:vayujal/widgets/navigations/custom_app_bar.dart';
 
@@ -185,7 +186,7 @@ class _ServicePersonnelPageState extends State<ServicePersonnelPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: CustomAppBar(title: "Personnel"),
+      appBar: Normalappbar(title: "Personnel List"),
       body: Column(
         children: [
           // Header Section

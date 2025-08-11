@@ -639,7 +639,17 @@ class _AllServiceRequestsPageState extends State<AllServiceRequestsPage> {
                   color: Colors.grey[600],
                 ),
               ),
-               const SizedBox(width: 4),
+               
+            ],
+          ),
+       Row(
+            children: [
+              Icon(
+                Icons.schedule,
+                size: 14,
+                color: Colors.grey[600],
+              ),
+              const SizedBox(width: 4),
               Text(
                 'Address By: $addressByDate',
                 style: TextStyle(
@@ -647,6 +657,7 @@ class _AllServiceRequestsPageState extends State<AllServiceRequestsPage> {
                   color: Colors.grey[600],
                 ),
               ),
+               
             ],
           ),
         ],

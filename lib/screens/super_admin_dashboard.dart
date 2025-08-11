@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vayujal/services/super_admin_service.dart';
+import 'package:vayujal/services/setup_dropdown_data.dart';
 import 'package:vayujal/widgets/navigations/NormalAppBar.dart';
 
 class SuperAdminDashboard extends StatefulWidget {
@@ -60,6 +61,47 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error loading data: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _initializeDropdownData() async {
+    try {
+      // Show loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 16),
+              Text('Initializing dropdown data...'),
+            ],
+          ),
+        ),
+      );
+
+      await SetupDropdownData.initializeDropdownData();
+
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Dropdown data initialized successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error initializing dropdown data: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -451,7 +493,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushNamed(context, '/login'),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
         ),
       ),
       body: _isLoading
@@ -659,6 +701,9 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                        ),
                      ),
                      const SizedBox(height: 16),
+
+                     // Dropdown Management Section
+                     
 
                      // Admins Section
                     Card(

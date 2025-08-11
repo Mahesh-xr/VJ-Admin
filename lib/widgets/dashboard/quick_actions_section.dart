@@ -32,7 +32,7 @@ class QuickActionsSection extends StatelessWidget {
         GestureDetector(
           onTap: () {
             
-            Navigator.pushReplacement(
+            Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const AddDeviceScreen()),
         );
@@ -42,7 +42,7 @@ class QuickActionsSection extends StatelessWidget {
             onPressed: () {
 
 
-              Navigator.pushReplacement(
+              Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const AddDeviceScreen()),
         );
@@ -53,7 +53,7 @@ class QuickActionsSection extends StatelessWidget {
         const SizedBox(height: 12),
          ActionButton(
           onPressed: () {
-             Navigator.of(context).pushReplacement(
+             Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const AllServiceRequestsPage(),
         ),
@@ -66,7 +66,7 @@ class QuickActionsSection extends StatelessWidget {
            onPressed: () {
 
 
-              Navigator.pushReplacement(
+              Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const DevicesScreen()),
         );

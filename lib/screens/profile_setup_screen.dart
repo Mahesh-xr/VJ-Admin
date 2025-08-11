@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:vayujal/DatabaseAction/profile_actions/firebase_profile_action.dart';
+import 'package:vayujal/services/dropdown_service.dart';
 import 'package:vayujal/screens/dashboard_screen.dart';
 import 'package:vayujal/widgets/navigations/NormalAppBar.dart';
 import '../utils/constants.dart';
@@ -34,17 +35,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   bool _isLoading = false;
   bool _isUploadingImage = false;
   String _profileImageUrl = '';
-
-  final List<String> _designations = [
-    'Admin',
-    'Technician',
-    'Senior Technician',
-    'Lead Technician',
-    'Supervisor',
-    'Manager',
-    'Engineer',
-    'Senior Engineer',
-  ];
+  List<String> _designations = [];
+  bool _isLoadingDesignations = true;
 
   final ImagePicker _picker = ImagePicker();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -54,6 +46,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   void initState() {
     super.initState();
     _initializeUserData();
+    _loadDesignations();
   }
 
   void _initializeUserData() {
@@ -61,6 +54,29 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     if (user != null && user.email != null) {
       _emailController.text = user.email!;
       _nameController.text = user.displayName ?? '';
+    }
+  }
+
+  Future<void> _loadDesignations() async {
+    try {
+      final designations = await DropdownService.getDesignationValues();
+      if (mounted) {
+        setState(() {
+          _designations = designations;
+          _isLoadingDesignations = false;
+          // Set default selection if available
+          if (_designations.isNotEmpty && _selectedDesignation.isEmpty) {
+            _selectedDesignation = _designations.first;
+          }
+        });
+      }
+    } catch (e) {
+      print('Error loading designations: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingDesignations = false;
+        });
+      }
     }
   }
 

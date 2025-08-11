@@ -635,11 +635,6 @@ class _NotificationListSectionState extends State<NotificationListSection> {
                 final title = docData['title'] ?? 'No Title';
                 final message = docData['message'] ?? 'No Message';
                 final srId = data['srId'] ?? '';
-                final technicianId = data['technicianId'] ?? data['senderId'] ?? '';
-                final technicianName = data['technicianName'] ?? data['senderName'] ?? '';
-                final customerName = data['customerName'] ?? '';
-                final equipmentModel = data['equipmentModel'] ?? '';
-                final location = data['location'] ?? '';
                 final createdAt = docData['createdAt'];
                 
                 
@@ -740,7 +735,7 @@ class _NotificationListSectionState extends State<NotificationListSection> {
                       if (isUnread) {
                         _markNotificationAsRead(doc.id);
                       }
-                      await _handleNotificationTap(data, notificationType, doc.id);
+                      await _handleNotificationTap(data, notificationType, doc.id,  srId);
                     },
                     onLongPress: () {
                       _showDeleteDialog(context, doc.id, docData['title'] ?? 'Notification');
@@ -843,7 +838,7 @@ class _NotificationListSectionState extends State<NotificationListSection> {
     }
   }
 
-  Future<void> _handleNotificationTap(Map<String, dynamic> data, String notificationType, String notificationId) async {
+  Future<void> _handleNotificationTap(Map<String, dynamic> data, String notificationType, String notificationId, String srId) async {
     // print('🔍 Handling notification tap - Type: $notificationType, ID: $notificationId');
     // print('🔍 Data: $data');
     
@@ -861,9 +856,7 @@ class _NotificationListSectionState extends State<NotificationListSection> {
     }
 
     // For nested data structure, get srId from the data field
-    final srId = data['srId'] ?? data['serviceRequestId'] ?? data['service_request_id'];
-    
-    if (srId == null || srId.isEmpty) {
+    if (srId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No service request associated with this notification'),
@@ -1013,7 +1006,7 @@ class _NotificationListSectionState extends State<NotificationListSection> {
     // Check both top-level and nested status
     final requestStatus = data['status'] ?? 'pending';
     final technicianName = data['technicianName'] ?? data['senderName'] ?? 'Unknown';
-    final technicianId = data['technicianUID'] ?? '';
+    final technicianId = docData?['data']?['technicianId'] ?? '';
     final message = data['message'] ?? '';
     final createdAt = data['createdAt'];
 
