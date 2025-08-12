@@ -544,6 +544,7 @@ class _AdminProfileSetupPageState extends State<AdminProfileSetupPage> {
                       label: 'Email',
                       icon: Icons.email,
                       keyboardType: TextInputType.emailAddress,
+                      enabled: false, // Email field is disabled
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter your email';
@@ -735,33 +736,35 @@ class _AdminProfileSetupPageState extends State<AdminProfileSetupPage> {
     required IconData icon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
+    bool enabled = true,
   }) {
     if (_isEditingMode) {
       // Show TextField in edit mode
       return TextFormField(
+        enabled: enabled,
         controller: controller,
         keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon, color: Colors.grey.shade500),
+          prefixIcon: Icon(icon, color: enabled ? Colors.grey.shade500 : Colors.grey.shade400),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: Colors.grey[300]!),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey[300]!),
+            borderSide: BorderSide(color: enabled ? Colors.grey[300]! : Colors.grey[200]!),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.blue, width: 2),
+            borderSide: BorderSide(color: enabled ? Colors.blue : Colors.grey[300]!, width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: Colors.red),
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: enabled ? Colors.white : Colors.grey[50],
         ),
         validator: validator,
       );

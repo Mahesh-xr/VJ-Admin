@@ -88,7 +88,7 @@ class LocalNotificationService {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'service_request_created',
-      'Service Request Created',
+      'Service Request Assigned',
       channelDescription: 'Notifications for new service requests',
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,

@@ -66,6 +66,11 @@ class DropdownService {
     return getDropdownValues('designation_admin');
   }
 
+  /// Get AMC type values
+  static Future<List<String>> getAmcTypeValues() async {
+    return getDropdownValues('amc_type');
+  }
+
   /// Default values if Firebase is not available
   static List<String> _getDefaultValues(String collectionName) {
     switch (collectionName) {
@@ -75,8 +80,10 @@ class DropdownService {
         return ['VJ - Home', 'VJ - Plus', 'VJ - Grand', 'VJ - Ultra', 'VJ - Max'];
       case 'dispenser':
         return ['YES', 'NO'];
-      case 'Designation':
+      case 'designation_admin':
         return ['Admin', 'Technician'];
+      case 'amc_type':
+        return ['Basic', 'Comprehensive', 'Premium', 'Extended'];
       default:
         return [];
     }

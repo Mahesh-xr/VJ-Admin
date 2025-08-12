@@ -1006,7 +1006,7 @@ class _NotificationListSectionState extends State<NotificationListSection> {
     // Check both top-level and nested status
     final requestStatus = data['status'] ?? 'pending';
     final technicianName = data['technicianName'] ?? data['senderName'] ?? 'Unknown';
-    final technicianId = docData?['data']?['technicianId'] ?? '';
+    final technicianId = data['technicianId'] ?? '';
     final message = data['message'] ?? '';
     final createdAt = data['createdAt'];
 
@@ -1761,7 +1761,6 @@ class _AdminRequestSectionState extends State<AdminRequestSection> {
     // Check both top-level and nested status
     final requestStatus = data['status'] ?? data['data']?['status'] ?? 'pending';
     final technicianName = data['technicianName'] ?? data['senderName'] ?? 'Unknown';
-    final technicianId = data['technicianUID'];
     final createdAt = docData['createdAt'];
     final message = docData['message'] ?? '';
 
@@ -1817,7 +1816,7 @@ class _AdminRequestSectionState extends State<AdminRequestSection> {
                         Icon(Icons.badge, size: 14, color: Colors.blue.shade600),
                         const SizedBox(width: 8),
                         Text(
-                          'ID: ${docData['data']['technicianUID']}',
+                          'ID: ${docData['data']['technicianId'] ?? data['technicianId'] ?? data['senderId'] ?? 'Unknown'}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.blue.shade600,

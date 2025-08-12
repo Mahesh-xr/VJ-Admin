@@ -21,6 +21,9 @@ class SetupDropdownData {
       // Setup designation values
       await _setupDesignationValues();
       
+      // Setup AMC type values
+      await _setupAmcTypeValues();
+      
       print('✅ Dropdown data initialization completed successfully!');
     } catch (e) {
       print('❌ Error initializing dropdown data: $e');
@@ -108,6 +111,28 @@ class SetupDropdownData {
       print('✅ Designation values setup completed');
     } catch (e) {
       print('❌ Error setting up designation values: $e');
+    }
+  }
+
+  /// Setup AMC type values
+  static Future<void> _setupAmcTypeValues() async {
+    try {
+      print('📝 Setting up AMC type values...');
+      
+      // Create the document with all values at once
+      await _firestore
+          .collection('dropdown_List')
+          .doc('amc_type')
+          .set({
+        '01': 'Basic',
+        '02': 'Comprehensive',
+        '03': 'Premium',
+        '04': 'Extended',
+      }, SetOptions(merge: true));
+      
+      print('✅ AMC type values setup completed');
+    } catch (e) {
+      print('❌ Error setting up AMC type values: $e');
     }
   }
 

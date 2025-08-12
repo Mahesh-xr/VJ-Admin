@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custom_text_field.dart';
 import 'custom_dropdown.dart';
+import '../../services/dropdown_service.dart';
 
 class CustomerDetailsSection extends StatefulWidget {
   const CustomerDetailsSection({Key? key}) : super(key: key);
@@ -19,17 +20,38 @@ class CustomerDetailsSectionState extends State<CustomerDetailsSection> {
   final fullAddressController = TextEditingController();
   final amcStartDateController = TextEditingController();
   final amcEndDateController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAmcTypes();
+  }
+
+  Future<void> _loadAmcTypes() async {
+    try {
+      final amcTypeValues = await DropdownService.getAmcTypeValues();
+      if (mounted) {
+        setState(() {
+          amcTypes = amcTypeValues;
+          _isLoadingAmcTypes = false;
+        });
+      }
+    } catch (e) {
+      print('Error loading AMC types: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingAmcTypes = false;
+        });
+      }
+    }
+  }
   
   bool enableMaintenanceContract = false;
   String? selectedAmcType;
   
   // AMC Type options
-  final List<String> amcTypes = [
-    'Basic AMC',
-    'Comprehensive AMC',
-    'Premium AMC',
-    'Extended AMC',
-  ];
+  List<String> amcTypes = [];
+  bool _isLoadingAmcTypes = true;
   
   Map<String, dynamic> get customerData => {
     'name': nameController.text,
@@ -292,16 +314,23 @@ class CustomerDetailsSectionState extends State<CustomerDetailsSection> {
                 const SizedBox(height: 20),
                 
                 // AMC Type Dropdown
-                CustomDropdown(
-                  label: 'AMC Type',
-                  value: selectedAmcType,
-                  items: amcTypes,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAmcType = value;
-                    });
-                  },
-                ),
+                _isLoadingAmcTypes
+                    ? const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : CustomDropdown(
+                        label: 'AMC Type',
+                        value: selectedAmcType,
+                        items: amcTypes,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedAmcType = value;
+                          });
+                        },
+                      ),
                 const SizedBox(height: 16),
                 
                 // AMC Start Date

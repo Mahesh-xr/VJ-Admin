@@ -247,6 +247,8 @@ class _DeviceFormState extends State<DeviceForm> {
               ),
             ),
           ),
+                        SizedBox(height: 50)
+
         ],
       ),
     );
